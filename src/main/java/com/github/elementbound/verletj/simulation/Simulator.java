@@ -31,7 +31,7 @@ public class Simulator {
         // Simulate entities
         spheres.forEach(e -> e.simulate(t, dt));
 
-        final var substepping = 8;
+        final var substepping = 16;
 
         for (int s = 0; s < substepping; ++s) {
             // Apply constraints

@@ -4,6 +4,7 @@ import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.simulation.SphereEntity;
 import com.github.elementbound.verletj.simulation.constraint.GlobalDistanceConstraint;
 import com.github.elementbound.verletj.simulation.constraint.LinkConstraint;
+import com.github.elementbound.verletj.simulation.constraint.PinConstraint;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
 import org.joml.Matrix4f;
@@ -70,10 +71,10 @@ public class VerletJApp {
         distanceConstraint.setMaxDistance(6.0);
         simulator.addConstraint(distanceConstraint);
 
-        int sphereCount = 128;
+        int sphereCount = 256;
         for (int i = 0; i < sphereCount; ++i) {
             var sphere = new SphereEntity();
-            sphere.getPosition().x = MathUtil.lerp(-1.5, 1.5, i / (double) (sphereCount - 1));
+            sphere.getPosition().x = MathUtil.lerp(-3.0, 3.0, i / (double) (sphereCount - 1));
             sphere.setR(1.0 / sphereCount);
 
             simulator.spawn(sphere);
@@ -87,6 +88,10 @@ public class VerletJApp {
             var link = new LinkConstraint(a, b);
             simulator.addConstraint(link);
         }
+
+        // Pin first link
+        var pin = new PinConstraint(simulator.getSpheres().get(0));
+        simulator.addConstraint(pin);
 
         var lastSimulated = System.currentTimeMillis() / 1000.0;
         var simulationTime = 0.0;
