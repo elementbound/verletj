@@ -3,10 +3,10 @@ package com.github.elementbound.verletj;
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.simulation.SphereEntity;
 import com.github.elementbound.verletj.simulation.constraint.GlobalDistanceConstraint;
+import com.github.elementbound.verletj.simulation.constraint.LinkConstraint;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
 import org.joml.Matrix4f;
-import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -70,21 +70,28 @@ public class VerletJApp {
         distanceConstraint.setMaxDistance(6.0);
         simulator.addConstraint(distanceConstraint);
 
-        for (int i = 0; i < 64; ++i) {
+        int sphereCount = 128;
+        for (int i = 0; i < sphereCount; ++i) {
             var sphere = new SphereEntity();
-            sphere.setPosition(new Vector2d(
-                    MathUtil.birandom(random, 2.0),
-                    MathUtil.birandom(random, 2.0)
-            ));
-            sphere.setR(MathUtil.randomBetween(random, 0.25, 2.0) / 4.0);
+            sphere.getPosition().x = MathUtil.lerp(-1.5, 1.5, i / (double) (sphereCount - 1));
+            sphere.setR(1.0 / sphereCount);
 
             simulator.spawn(sphere);
+        }
+
+        // Link chain
+        for (int i = 1; i < simulator.getSpheres().size(); ++i) {
+            var a = simulator.getSpheres().get(i - 1);
+            var b = simulator.getSpheres().get(i);
+
+            var link = new LinkConstraint(a, b);
+            simulator.addConstraint(link);
         }
 
         var lastSimulated = System.currentTimeMillis() / 1000.0;
         var simulationTime = 0.0;
         final var simulationInterval = 1.0 / 60.0;
-        final var timeScale = 1.0;
+        final var timeScale = 1.0 / 40.0;
 
         while (!window.shouldClose()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
