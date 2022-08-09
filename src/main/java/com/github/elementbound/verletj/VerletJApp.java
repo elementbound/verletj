@@ -2,6 +2,7 @@ package com.github.elementbound.verletj;
 
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.simulation.SphereEntity;
+import com.github.elementbound.verletj.simulation.constraint.GlobalDistanceConstraint;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
 import org.joml.Matrix4f;
@@ -65,13 +66,17 @@ public class VerletJApp {
         var random = new Random();
         random.setSeed(0xC0FFEE);
 
-        for (int i = 0; i < 256; ++i) {
+        var distanceConstraint = new GlobalDistanceConstraint(simulator.getSpheres());
+        distanceConstraint.setMaxDistance(6.0);
+        simulator.addConstraint(distanceConstraint);
+
+        for (int i = 0; i < 64; ++i) {
             var sphere = new SphereEntity();
             sphere.setPosition(new Vector2d(
-                    random.nextGaussian() * 2.0,
-                    random.nextGaussian() * 2.0
+                    MathUtil.birandom(random, 2.0),
+                    MathUtil.birandom(random, 2.0)
             ));
-            sphere.setR(0.25);
+            sphere.setR(MathUtil.randomBetween(random, 0.25, 2.0) / 4.0);
 
             simulator.spawn(sphere);
         }

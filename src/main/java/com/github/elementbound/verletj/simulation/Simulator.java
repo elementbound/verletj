@@ -1,18 +1,27 @@
 package com.github.elementbound.verletj.simulation;
 
+import com.github.elementbound.verletj.simulation.constraint.Constraint;
 import org.joml.Vector2d;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Simulator {
     private static final Vector2d GRAVITY = new Vector2d(0.0, -2.0);
 
-    private List<SphereEntity> spheres = new ArrayList<>();
+    private final List<SphereEntity> spheres = new ArrayList<>();
+    private final List<SphereEntity> immutableSpheresView = Collections.unmodifiableList(spheres);
+
+    private final List<Constraint> constraints = new ArrayList<>();
 
     public void spawn(SphereEntity entity) {
         spheres.add(entity);
         entity.onSpawn();
+    }
+
+    public void addConstraint(Constraint constraint) {
+        constraints.add(constraint);
     }
 
     public void simulate(double t, double dt) {
@@ -22,16 +31,11 @@ public class Simulator {
         // Simulate entities
         spheres.forEach(e -> e.simulate(t, dt));
 
-        final var substepping = 8;
+        final var substepping = 16;
 
         for (int s = 0; s < substepping; ++s) {
-            // Constrain distance from origin
-            spheres.forEach(e -> {
-                var position = e.getPosition();
-                if (position.length() > 8.0 - e.getR()) {
-                    position.normalize(8.0 - e.getR());
-                }
-            });
+            // Apply constraints
+            constraints.forEach(Constraint::apply);
 
             // Find collisions
             List<Collision> collisions = new ArrayList<>();
@@ -67,14 +71,17 @@ public class Simulator {
 
                 a.getPosition().sub(axis);
                 b.getPosition().add(axis);
-
-                // System.out.printf("rA=%f; rB=%f; d=%f\n", a.getR(), b.getR(), a.getPosition().distance(b.getPosition()));
             });
         }
     }
 
     public void draw() {
         spheres.forEach(Entity::draw);
+        constraints.forEach(Constraint::draw);
+    }
+
+    public List<SphereEntity> getSpheres() {
+        return immutableSpheresView;
     }
 
     private static record Collision(SphereEntity a, SphereEntity b,
