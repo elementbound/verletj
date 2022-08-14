@@ -3,15 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.elementbound</groupId>
     <artifactId>verletj</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.6-SNAPSHOT</version>
 
     <properties>
         <lwjgl.version>3.3.1</lwjgl.version>
         <joml.version>1.10.4</joml.version>
         <lwjgl.natives>natives-windows</lwjgl.natives>
-
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
     </properties>
 
     <build>

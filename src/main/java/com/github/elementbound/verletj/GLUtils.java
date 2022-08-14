@@ -3,6 +3,7 @@ package com.github.elementbound.verletj;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
 
+import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glColor3d;
@@ -13,8 +14,8 @@ public class GLUtils {
     private static final Vector3d WHITE = new Vector3d(1.0);
     private static final int DEFAULT_RES = 16;
 
-    public static void drawCircle(Vector2d position, double r, Vector3d color, int res) {
-        glBegin(GL_TRIANGLE_FAN);
+    public static void drawCircle(Vector2d position, double r, Vector3d color, boolean fill, int res) {
+        glBegin(fill ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
 
         for (int i = 0; i < res; ++i) {
             double f = i / (double) res;
@@ -27,11 +28,11 @@ public class GLUtils {
         glEnd();
     }
 
-    public static void drawCircle(Vector2d position, double r) {
-        drawCircle(position, r, WHITE, DEFAULT_RES);
+    public static void drawCircle(Vector2d position, double r, boolean fill) {
+        drawCircle(position, r, WHITE, fill, DEFAULT_RES);
     }
 
-    public static void drawCircle(Vector2d position, double r, Vector3d color) {
-        drawCircle(position, r, color, DEFAULT_RES);
+    public static void drawCircle(Vector2d position, double r, Vector3d color, boolean fill) {
+        drawCircle(position, r, color, fill, DEFAULT_RES);
     }
 }

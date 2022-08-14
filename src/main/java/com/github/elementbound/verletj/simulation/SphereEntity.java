@@ -31,7 +31,7 @@ public class SphereEntity implements Entity {
 
     @Override
     public void draw() {
-        GLUtils.drawCircle(position, r);
+        GLUtils.drawCircle(position, r, true);
     }
 
     public double getR() {

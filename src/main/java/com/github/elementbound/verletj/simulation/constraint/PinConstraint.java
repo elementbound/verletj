@@ -6,6 +6,8 @@ import org.joml.Vector2d;
 import org.joml.Vector3d;
 
 public class PinConstraint implements Constraint {
+    private final Vector3d COLOR = new Vector3d(1., 0., 0.);
+
     private final Vector2d pinPosition;
     private final SphereEntity entity;
 
@@ -21,6 +23,6 @@ public class PinConstraint implements Constraint {
 
     @Override
     public void draw() {
-        GLUtils.drawCircle(pinPosition, 0.25, new Vector3d(1., 0., 0.));
+        GLUtils.drawCircle(pinPosition, 0.25, COLOR, false);
     }
 }

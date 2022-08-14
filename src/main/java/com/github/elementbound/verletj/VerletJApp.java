@@ -3,8 +3,7 @@ package com.github.elementbound.verletj;
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.simulation.SphereEntity;
 import com.github.elementbound.verletj.simulation.constraint.GlobalDistanceConstraint;
-import com.github.elementbound.verletj.simulation.constraint.LinkConstraint;
-import com.github.elementbound.verletj.simulation.constraint.PinConstraint;
+import com.github.elementbound.verletj.simulation.effector.ForceEffector;
 import com.github.elementbound.verletj.simulation.effector.GravityEffector;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
@@ -70,38 +69,34 @@ public class VerletJApp {
         random.setSeed(0xC0FFEE);
 
         var distanceConstraint = new GlobalDistanceConstraint(simulator.getSpheres());
-        distanceConstraint.setMaxDistance(6.0);
+        distanceConstraint.setMaxDistance(7.0);
         simulator.addConstraint(distanceConstraint);
 
-        var gravityEffector = new GravityEffector(new Vector2d(0.0, -2.0), simulator.getSpheres());
+        var gravityEffector = new GravityEffector(new Vector2d(0.0, -0.5), simulator.getSpheres());
         simulator.addEffector(gravityEffector);
+
+        var forceEffector = new ForceEffector(simulator.getSpheres());
+        forceEffector.setStrength(-1.0);
+        forceEffector.setRange(4.0);
+        forceEffector.setFalloff(2.0);
+        forceEffector.getPosition().set(0., -distanceConstraint.getMaxDistance() + forceEffector.getRange());
+        simulator.addEffector(forceEffector);
 
         int sphereCount = 256;
         for (int i = 0; i < sphereCount; ++i) {
             var sphere = new SphereEntity();
-            sphere.getPosition().x = MathUtil.lerp(-3.0, 3.0, i / (double) (sphereCount - 1));
-            sphere.setR(1.0 / sphereCount);
+            sphere.getPosition().x = MathUtil.birandom(random, 3.0);
+            sphere.getPosition().y = MathUtil.birandom(random, 3.0);
+
+            sphere.setR(0.25);
 
             simulator.spawn(sphere);
         }
 
-        // Link chain
-        for (int i = 1; i < simulator.getSpheres().size(); ++i) {
-            var a = simulator.getSpheres().get(i - 1);
-            var b = simulator.getSpheres().get(i);
-
-            var link = new LinkConstraint(a, b);
-            simulator.addConstraint(link);
-        }
-
-        // Pin first link
-        var pin = new PinConstraint(simulator.getSpheres().get(0));
-        simulator.addConstraint(pin);
-
         var lastSimulated = System.currentTimeMillis() / 1000.0;
         var simulationTime = 0.0;
         final var simulationInterval = 1.0 / 60.0;
-        final var timeScale = 1.0 / 40.0;
+        final var timeScale = 1.0 / 1.0;
 
         while (!window.shouldClose()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
