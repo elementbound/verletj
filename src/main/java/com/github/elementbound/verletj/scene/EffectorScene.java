@@ -30,8 +30,8 @@ public class EffectorScene extends AsyncScene {
         forceEffector.getPosition().set(0., distanceConstraint.getMaxDistance() - forceEffector.getRange());
         simulator.addEffector(forceEffector);
 
-        int count = 512;
-        long restMillis = 10;
+        int count = 768;
+        long restMillis = 5;
         for (int i = 0; i < count; ++i) {
             var circle = new CircleEntity();
             circle.getPosition().x = MathUtil.birandom(random, 3.0);

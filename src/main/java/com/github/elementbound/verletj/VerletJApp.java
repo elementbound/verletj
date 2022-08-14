@@ -1,6 +1,6 @@
 package com.github.elementbound.verletj;
 
-import com.github.elementbound.verletj.scene.CirclesScene;
+import com.github.elementbound.verletj.scene.EffectorScene;
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
@@ -60,7 +60,7 @@ public class VerletJApp {
 
         var simulator = new Simulator();
 
-        var scene = new CirclesScene();
+        var scene = new EffectorScene();
         scene.run(simulator);
 
         var lastSimulated = System.currentTimeMillis() / 1000.0;
@@ -82,7 +82,8 @@ public class VerletJApp {
                 glLoadMatrixf(matProjection.get(matData));
             }
 
-            while (System.currentTimeMillis() / 1000.0 - lastSimulated > simulationInterval) {
+            var catchupTime = System.currentTimeMillis() / 1000.0;
+            while (catchupTime - lastSimulated > simulationInterval) {
                 lastSimulated += simulationInterval;
                 var dt = simulationInterval * timeScale;
                 simulationTime += dt;
