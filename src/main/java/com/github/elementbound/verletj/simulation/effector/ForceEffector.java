@@ -14,7 +14,8 @@ public class ForceEffector implements Effector {
     private final Vector2d position = new Vector2d();
     private final List<CircleEntity> circles;
     private double range;
-    private double strength;
+    private double radialStrength;
+    private double vortexStrength;
     private double falloff;
 
     public ForceEffector(List<CircleEntity> circles) {
@@ -36,8 +37,16 @@ public class ForceEffector implements Effector {
             }
 
             var f = Math.pow(1.0 - distance / range, falloff);
-            delta.normalize(f * strength);
+
+
+            var tangent = new Vector2d(delta).normalize(f * vortexStrength);
+            double t = tangent.x;
+            tangent.x = -tangent.y;
+            tangent.y = t;
+
+            delta.normalize(f * radialStrength);
             circle.accelerate(delta);
+            circle.accelerate(tangent);
         }
     }
 
@@ -73,12 +82,20 @@ public class ForceEffector implements Effector {
         this.range = range;
     }
 
-    public double getStrength() {
-        return strength;
+    public double getRadialStrength() {
+        return radialStrength;
     }
 
-    public void setStrength(double strength) {
-        this.strength = strength;
+    public void setRadialStrength(double radialStrength) {
+        this.radialStrength = radialStrength;
+    }
+
+    public double getVortexStrength() {
+        return vortexStrength;
+    }
+
+    public void setVortexStrength(double vortexStrength) {
+        this.vortexStrength = vortexStrength;
     }
 
     public double getFalloff() {

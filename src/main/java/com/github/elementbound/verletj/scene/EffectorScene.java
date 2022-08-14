@@ -23,14 +23,23 @@ public class EffectorScene extends AsyncScene {
         var gravityEffector = new GravityEffector(new Vector2d(0.0, -0.5), simulator.getCircles());
         simulator.addEffector(gravityEffector);
 
-        var forceEffector = new ForceEffector(simulator.getCircles());
-        forceEffector.setStrength(-4.0);
-        forceEffector.setRange(4.0);
-        forceEffector.setFalloff(2.0);
-        forceEffector.getPosition().set(0., distanceConstraint.getMaxDistance() - forceEffector.getRange());
-        simulator.addEffector(forceEffector);
+        var topEffector = new ForceEffector(simulator.getCircles());
+        topEffector.setRadialStrength(-4.0);
+        topEffector.setVortexStrength(4.0);
+        topEffector.setRange(4.0);
+        topEffector.setFalloff(2.0);
+        topEffector.getPosition().set(0., distanceConstraint.getMaxDistance() - topEffector.getRange());
+        simulator.addEffector(topEffector);
 
-        int count = 768;
+        var bottomEffector = new ForceEffector(simulator.getCircles());
+        bottomEffector.setRadialStrength(-4.0);
+        bottomEffector.setVortexStrength(-4.0);
+        bottomEffector.setRange(4.0);
+        bottomEffector.setFalloff(2.0);
+        bottomEffector.getPosition().set(topEffector.getPosition()).negate();
+        simulator.addEffector(bottomEffector);
+
+        int count = 512;
         long restMillis = 5;
         for (int i = 0; i < count; ++i) {
             var circle = new CircleEntity();
