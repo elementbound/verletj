@@ -5,9 +5,11 @@ import com.github.elementbound.verletj.simulation.SphereEntity;
 import com.github.elementbound.verletj.simulation.constraint.GlobalDistanceConstraint;
 import com.github.elementbound.verletj.simulation.constraint.LinkConstraint;
 import com.github.elementbound.verletj.simulation.constraint.PinConstraint;
+import com.github.elementbound.verletj.simulation.effector.GravityEffector;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
 import org.joml.Matrix4f;
+import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
@@ -70,6 +72,9 @@ public class VerletJApp {
         var distanceConstraint = new GlobalDistanceConstraint(simulator.getSpheres());
         distanceConstraint.setMaxDistance(6.0);
         simulator.addConstraint(distanceConstraint);
+
+        var gravityEffector = new GravityEffector(new Vector2d(0.0, -2.0), simulator.getSpheres());
+        simulator.addEffector(gravityEffector);
 
         int sphereCount = 256;
         for (int i = 0; i < sphereCount; ++i) {

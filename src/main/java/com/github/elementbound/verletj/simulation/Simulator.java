@@ -1,6 +1,7 @@
 package com.github.elementbound.verletj.simulation;
 
 import com.github.elementbound.verletj.simulation.constraint.Constraint;
+import com.github.elementbound.verletj.simulation.effector.Effector;
 import org.joml.Vector2d;
 
 import java.util.ArrayList;
@@ -8,12 +9,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class Simulator {
-    private static final Vector2d GRAVITY = new Vector2d(0.0, -2.0);
-
     private final List<SphereEntity> spheres = new ArrayList<>();
     private final List<SphereEntity> immutableSpheresView = Collections.unmodifiableList(spheres);
 
     private final List<Constraint> constraints = new ArrayList<>();
+    private final List<Effector> effectors = new ArrayList<>();
 
     public void spawn(SphereEntity entity) {
         spheres.add(entity);
@@ -24,9 +24,13 @@ public class Simulator {
         constraints.add(constraint);
     }
 
+    public void addEffector(Effector effector) {
+        effectors.add(effector);
+    }
+
     public void simulate(double t, double dt) {
-        // Gravity
-        spheres.forEach(e -> e.accelerate(GRAVITY));
+        // Effectors
+        effectors.forEach(Effector::apply);
 
         // Simulate entities
         spheres.forEach(e -> e.simulate(t, dt));
@@ -78,6 +82,7 @@ public class Simulator {
     public void draw() {
         spheres.forEach(Entity::draw);
         constraints.forEach(Constraint::draw);
+        effectors.forEach(Effector::draw);
     }
 
     public List<SphereEntity> getSpheres() {
