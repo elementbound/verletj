@@ -6,7 +6,7 @@ import org.joml.Vector2d;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class SphereEntity implements Entity {
+public class CircleEntity {
     private double r = 1.0;
     private final Vector2d position = new Vector2d();
     private final Vector2d previousPosition = new Vector2d();
@@ -16,7 +16,6 @@ public class SphereEntity implements Entity {
         this.acceleration.add(acceleration);
     }
 
-    @Override
     public void simulate(double t, double dt) {
         // v = position - previousPosition
         var velocity = new Vector2d(position).sub(previousPosition);
@@ -29,7 +28,6 @@ public class SphereEntity implements Entity {
         acceleration.set(0.0);
     }
 
-    @Override
     public void draw() {
         GLUtils.drawCircle(position, r, true);
     }
@@ -42,12 +40,10 @@ public class SphereEntity implements Entity {
         this.r = r;
     }
 
-    @Override
     public Vector2d getPosition() {
         return position;
     }
 
-    @Override
     public void setPosition(Vector2d position) {
         this.position.set(position);
     }
@@ -60,7 +56,7 @@ public class SphereEntity implements Entity {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        SphereEntity that = (SphereEntity) o;
+        CircleEntity that = (CircleEntity) o;
         return Double.compare(that.r, r) == 0 && position.equals(that.position);
     }
 
@@ -71,7 +67,7 @@ public class SphereEntity implements Entity {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", SphereEntity.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", CircleEntity.class.getSimpleName() + "[", "]")
                 .add("r=" + r)
                 .add("position=" + position)
                 .add("previousPosition=" + previousPosition)

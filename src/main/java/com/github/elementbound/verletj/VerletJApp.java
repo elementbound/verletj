@@ -1,7 +1,7 @@
 package com.github.elementbound.verletj;
 
 import com.github.elementbound.verletj.simulation.Simulator;
-import com.github.elementbound.verletj.simulation.SphereEntity;
+import com.github.elementbound.verletj.simulation.CircleEntity;
 import com.github.elementbound.verletj.simulation.constraint.GlobalDistanceConstraint;
 import com.github.elementbound.verletj.simulation.effector.ForceEffector;
 import com.github.elementbound.verletj.simulation.effector.GravityEffector;
@@ -68,29 +68,29 @@ public class VerletJApp {
         var random = new Random();
         random.setSeed(0xC0FFEE);
 
-        var distanceConstraint = new GlobalDistanceConstraint(simulator.getSpheres());
+        var distanceConstraint = new GlobalDistanceConstraint(simulator.getCircles());
         distanceConstraint.setMaxDistance(7.0);
         simulator.addConstraint(distanceConstraint);
 
-        var gravityEffector = new GravityEffector(new Vector2d(0.0, -0.5), simulator.getSpheres());
+        var gravityEffector = new GravityEffector(new Vector2d(0.0, -0.5), simulator.getCircles());
         simulator.addEffector(gravityEffector);
 
-        var forceEffector = new ForceEffector(simulator.getSpheres());
+        var forceEffector = new ForceEffector(simulator.getCircles());
         forceEffector.setStrength(-1.0);
         forceEffector.setRange(4.0);
         forceEffector.setFalloff(2.0);
         forceEffector.getPosition().set(0., -distanceConstraint.getMaxDistance() + forceEffector.getRange());
         simulator.addEffector(forceEffector);
 
-        int sphereCount = 256;
-        for (int i = 0; i < sphereCount; ++i) {
-            var sphere = new SphereEntity();
-            sphere.getPosition().x = MathUtil.birandom(random, 3.0);
-            sphere.getPosition().y = MathUtil.birandom(random, 3.0);
+        int count = 256;
+        for (int i = 0; i < count; ++i) {
+            var circle = new CircleEntity();
+            circle.getPosition().x = MathUtil.birandom(random, 3.0);
+            circle.getPosition().y = MathUtil.birandom(random, 3.0);
 
-            sphere.setR(0.25);
+            circle.setR(0.25);
 
-            simulator.spawn(sphere);
+            simulator.spawn(circle);
         }
 
         var lastSimulated = System.currentTimeMillis() / 1000.0;

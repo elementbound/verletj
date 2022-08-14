@@ -1,6 +1,6 @@
 package com.github.elementbound.verletj.simulation.constraint;
 
-import com.github.elementbound.verletj.simulation.SphereEntity;
+import com.github.elementbound.verletj.simulation.CircleEntity;
 import org.joml.Vector2d;
 
 import java.util.List;
@@ -12,22 +12,22 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex2d;
 
 public class GlobalDistanceConstraint implements Constraint {
-    private final List<SphereEntity> spheres;
+    private final List<CircleEntity> circles;
     private final Vector2d origin = new Vector2d(0.0);
     private double maxDistance = 1.0;
 
-    public GlobalDistanceConstraint(List<SphereEntity> spheres) {
-        this.spheres = spheres;
+    public GlobalDistanceConstraint(List<CircleEntity> circles) {
+        this.circles = circles;
     }
 
     @Override
     public void apply() {
-        for (var sphere : spheres) {
-            var offset = new Vector2d(sphere.getPosition()).sub(origin);
+        for (var circle : circles) {
+            var offset = new Vector2d(circle.getPosition()).sub(origin);
 
-            if (offset.length() + sphere.getR() > maxDistance) {
-                offset.normalize(maxDistance - sphere.getR());
-                sphere.getPosition().set(origin).add(offset);
+            if (offset.length() + circle.getR() > maxDistance) {
+                offset.normalize(maxDistance - circle.getR());
+                circle.getPosition().set(origin).add(offset);
             }
         }
     }

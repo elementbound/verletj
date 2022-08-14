@@ -1,6 +1,6 @@
 package com.github.elementbound.verletj.simulation.constraint;
 
-import com.github.elementbound.verletj.simulation.SphereEntity;
+import com.github.elementbound.verletj.simulation.CircleEntity;
 import org.joml.Vector2d;
 
 import java.util.Objects;
@@ -12,11 +12,11 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex2d;
 
 public class LinkConstraint implements Constraint {
-    private final SphereEntity a;
-    private final SphereEntity b;
+    private final CircleEntity a;
+    private final CircleEntity b;
     private final double distance;
 
-    public LinkConstraint(SphereEntity a, SphereEntity b) {
+    public LinkConstraint(CircleEntity a, CircleEntity b) {
         this.a = a;
         this.b = b;
         distance = a.getPosition().distance(b.getPosition());

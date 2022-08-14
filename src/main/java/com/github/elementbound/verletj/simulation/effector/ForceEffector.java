@@ -1,7 +1,7 @@
 package com.github.elementbound.verletj.simulation.effector;
 
 import com.github.elementbound.verletj.GLUtils;
-import com.github.elementbound.verletj.simulation.SphereEntity;
+import com.github.elementbound.verletj.simulation.CircleEntity;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
 
@@ -12,21 +12,21 @@ public class ForceEffector implements Effector {
     private static final Vector3d INNER_COLOR = new Vector3d(0.25, 0.25, 0.375);
 
     private final Vector2d position = new Vector2d();
-    private final List<SphereEntity> spheres;
+    private final List<CircleEntity> circles;
     private double range;
     private double strength;
     private double falloff;
 
-    public ForceEffector(List<SphereEntity> spheres) {
-        this.spheres = spheres;
+    public ForceEffector(List<CircleEntity> circles) {
+        this.circles = circles;
     }
 
     @Override
     public void apply() {
         var delta = new Vector2d();
 
-        for (var sphere : spheres) {
-            delta.set(sphere.getPosition())
+        for (var circle : circles) {
+            delta.set(circle.getPosition())
                     .sub(position);
 
             var distance = delta.length();
@@ -37,7 +37,7 @@ public class ForceEffector implements Effector {
 
             var f = Math.pow(1.0 - distance / range, falloff);
             delta.normalize(f * strength);
-            sphere.accelerate(delta);
+            circle.accelerate(delta);
         }
     }
 
@@ -89,7 +89,7 @@ public class ForceEffector implements Effector {
         this.falloff = falloff;
     }
 
-    public List<SphereEntity> getSpheres() {
-        return spheres;
+    public List<CircleEntity> getCircles() {
+        return circles;
     }
 }

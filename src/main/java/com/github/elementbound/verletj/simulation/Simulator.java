@@ -9,15 +9,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class Simulator {
-    private final List<SphereEntity> spheres = new ArrayList<>();
-    private final List<SphereEntity> immutableSpheresView = Collections.unmodifiableList(spheres);
+    private final List<CircleEntity> circles = new ArrayList<>();
+    private final List<CircleEntity> immutableCirclesView = Collections.unmodifiableList(circles);
 
     private final List<Constraint> constraints = new ArrayList<>();
     private final List<Effector> effectors = new ArrayList<>();
 
-    public void spawn(SphereEntity entity) {
-        spheres.add(entity);
-        entity.onSpawn();
+    public void spawn(CircleEntity entity) {
+        circles.add(entity);
     }
 
     public void addConstraint(Constraint constraint) {
@@ -33,7 +32,7 @@ public class Simulator {
         effectors.forEach(Effector::apply);
 
         // Simulate entities
-        spheres.forEach(e -> e.simulate(t, dt));
+        circles.forEach(e -> e.simulate(t, dt));
 
         final var substepping = 16;
 
@@ -44,21 +43,21 @@ public class Simulator {
             // Find collisions
             List<Collision> collisions = new ArrayList<>();
 
-            for (int i = 0; i < spheres.size(); ++i) {
-                for (int j = i + 1; j < spheres.size(); ++j) {
-                    var sphereA = spheres.get(i);
-                    var sphereB = spheres.get(j);
+            for (int i = 0; i < circles.size(); ++i) {
+                for (int j = i + 1; j < circles.size(); ++j) {
+                    var circleA = circles.get(i);
+                    var circleB = circles.get(j);
 
-                    var posA = sphereA.getPosition();
-                    var posB = sphereB.getPosition();
+                    var posA = circleA.getPosition();
+                    var posB = circleB.getPosition();
 
-                    var rA = sphereA.getR();
-                    var rB = sphereB.getR();
+                    var rA = circleA.getR();
+                    var rB = circleB.getR();
 
                     var distance = posA.distance(posB);
 
                     if (distance < rA + rB) {
-                        collisions.add(new Collision(sphereA, sphereB, distance));
+                        collisions.add(new Collision(circleA, circleB, distance));
                     }
                 }
             }
@@ -80,16 +79,16 @@ public class Simulator {
     }
 
     public void draw() {
-        spheres.forEach(Entity::draw);
+        circles.forEach(CircleEntity::draw);
         constraints.forEach(Constraint::draw);
         effectors.forEach(Effector::draw);
     }
 
-    public List<SphereEntity> getSpheres() {
-        return immutableSpheresView;
+    public List<CircleEntity> getCircles() {
+        return immutableCirclesView;
     }
 
-    private static record Collision(SphereEntity a, SphereEntity b,
+    private static record Collision(CircleEntity a, CircleEntity b,
                                     double distance) {
     }
 }
