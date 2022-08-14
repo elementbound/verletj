@@ -48,6 +48,10 @@ public class CircleEntity {
         this.position.set(position);
     }
 
+    public void resetVelocity() {
+        previousPosition.set(position);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

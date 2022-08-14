@@ -7,6 +7,8 @@ import org.joml.Vector2d;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Simulator {
     private final List<CircleEntity> circles = new ArrayList<>();
@@ -15,8 +17,10 @@ public class Simulator {
     private final List<Constraint> constraints = new ArrayList<>();
     private final List<Effector> effectors = new ArrayList<>();
 
+    private final Queue<CircleEntity> circlesToAdd = new ConcurrentLinkedDeque<>();
+
     public void spawn(CircleEntity entity) {
-        circles.add(entity);
+        circlesToAdd.add(entity);
     }
 
     public void addConstraint(Constraint constraint) {
@@ -28,6 +32,10 @@ public class Simulator {
     }
 
     public void simulate(double t, double dt) {
+        // Admit waiting items
+        circles.addAll(circlesToAdd);
+        circlesToAdd.clear();
+
         // Effectors
         effectors.forEach(Effector::apply);
 
