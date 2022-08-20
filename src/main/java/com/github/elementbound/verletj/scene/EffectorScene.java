@@ -5,8 +5,6 @@ import com.github.elementbound.verletj.simulation.CircleEntity;
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.simulation.constraint.GlobalDistanceConstraint;
 import com.github.elementbound.verletj.simulation.effector.ForceEffector;
-import com.github.elementbound.verletj.simulation.effector.GravityEffector;
-import org.joml.Vector2d;
 
 import java.util.Random;
 
@@ -19,9 +17,6 @@ public class EffectorScene extends AsyncScene {
         var distanceConstraint = new GlobalDistanceConstraint(simulator.getCircles());
         distanceConstraint.setMaxDistance(7.0);
         simulator.addConstraint(distanceConstraint);
-
-        var gravityEffector = new GravityEffector(new Vector2d(0.0, -0.5), simulator.getCircles());
-        simulator.addEffector(gravityEffector);
 
         var topEffector = new ForceEffector(simulator.getCircles());
         topEffector.setRadialStrength(-4.0);

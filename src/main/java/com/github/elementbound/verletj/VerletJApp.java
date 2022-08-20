@@ -1,6 +1,6 @@
 package com.github.elementbound.verletj;
 
-import com.github.elementbound.verletj.scene.EffectorScene;
+import com.github.elementbound.verletj.scene.SoftBodyScene;
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
@@ -9,6 +9,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.glfwInit;
@@ -60,13 +62,21 @@ public class VerletJApp {
 
         var simulator = new Simulator();
 
-        var scene = new EffectorScene();
+        var scene = new SoftBodyScene();
         scene.run(simulator);
 
         var lastSimulated = System.currentTimeMillis() / 1000.0;
         var simulationTime = 0.0;
         final var simulationInterval = 1.0 / 60.0;
-        final var timeScale = 1.0 / 1.0;
+        final var timeScale = 1.0 / 4.0;
+
+        final boolean[] isPaused = {true};
+
+        window.onKey().subscribe(event -> {
+            if (event.key() == GLFW_KEY_SPACE && event.action() == GLFW_PRESS) {
+                isPaused[0] = !isPaused[0];
+            }
+        });
 
         while (!window.shouldClose()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -88,7 +98,9 @@ public class VerletJApp {
                 var dt = simulationInterval * timeScale;
                 simulationTime += dt;
 
-                simulator.simulate(simulationTime, dt);
+                if (!isPaused[0]) {
+                    simulator.simulate(simulationTime, dt);
+                }
             }
 
             simulator.draw();
