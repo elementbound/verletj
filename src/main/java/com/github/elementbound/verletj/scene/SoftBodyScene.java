@@ -4,7 +4,7 @@ import com.github.elementbound.verletj.simulation.CircleEntity;
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.simulation.constraint.GlobalDistanceConstraint;
 import com.github.elementbound.verletj.simulation.effector.GravityEffector;
-import com.github.elementbound.verletj.simulation.effector.SoftBodyVertexEffector;
+import com.github.elementbound.verletj.simulation.effector.SoftBodyEffector;
 import org.joml.Vector2d;
 
 import java.util.ArrayList;
@@ -33,6 +33,7 @@ public class SoftBodyScene extends AsyncScene {
 
     private void createCircle(Simulator simulator, Vector2d position, double r, double thickness, int res) {
         var circles = new ArrayList<CircleEntity>();
+        var effector = new SoftBodyEffector();
 
         for (var i = 0; i < res; i++) {
             var a = i / (double) (res) * 2.0 * Math.PI;
@@ -46,24 +47,12 @@ public class SoftBodyScene extends AsyncScene {
             circle.resetVelocity();
 
             circles.add(circle);
+            effector.add(circle);
             simulator.spawn(circle);
         }
 
+        simulator.addEffector(effector);
+
         System.out.printf("Spawned %d circles\n", circles.size());
-
-        for (var i = 0; i < circles.size(); ++i) {
-            var leftIdx = (i + circles.size() - 1) % circles.size();
-            var rightIdx = (i + 1) % circles.size();
-
-            var left = circles.get(leftIdx);
-            var middle = circles.get(i);
-            var right = circles.get(rightIdx);
-
-            var effector = new SoftBodyVertexEffector(middle);
-            effector.link(left);
-            effector.link(right);
-
-            simulator.addEffector(effector);
-        }
     }
 }

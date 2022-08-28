@@ -84,6 +84,9 @@ public class Simulator {
                 b.getPosition().add(axis);
             });
         }
+
+        // Effectors
+        effectors.forEach(Effector::postResolve);
     }
 
     public void draw() {
