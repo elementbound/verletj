@@ -1,6 +1,6 @@
 package com.github.elementbound.verletj;
 
-import com.github.elementbound.verletj.scene.SoftBodyScene;
+import com.github.elementbound.verletj.scene.EffectorScene;
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
@@ -62,15 +62,15 @@ public class VerletJApp {
 
         var simulator = new Simulator();
 
-        var scene = new SoftBodyScene();
+        var scene = new EffectorScene();
         scene.run(simulator);
 
         var lastSimulated = System.currentTimeMillis() / 1000.0;
         var simulationTime = 0.0;
         final var simulationInterval = 1.0 / 60.0;
-        final var timeScale = 1.0 / 4.0;
+        final var timeScale = 1.0;
 
-        final boolean[] isPaused = {true};
+        final boolean[] isPaused = {false};
 
         window.onKey().subscribe(event -> {
             if (event.key() == GLFW_KEY_SPACE && event.action() == GLFW_PRESS) {
