@@ -1,6 +1,6 @@
 package com.github.elementbound.verletj;
 
-import com.github.elementbound.verletj.scene.EffectorScene;
+import com.github.elementbound.verletj.scene.RopesScene;
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
@@ -62,7 +62,7 @@ public class VerletJApp {
 
         var simulator = new Simulator();
 
-        var scene = new EffectorScene();
+        var scene = new RopesScene();
         scene.run(simulator);
 
         var lastSimulated = System.currentTimeMillis() / 1000.0;

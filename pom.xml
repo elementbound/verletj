@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.elementbound</groupId>
     <artifactId>verletj</artifactId>
-    <version>0.10.1-SNAPSHOT</version>
+    <version>0.11.0-SNAPSHOT</version>
 
     <properties>
         <lwjgl.version>3.3.1</lwjgl.version>
@@ -18,8 +18,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
+                    <source>18</source>
+                    <target>18</target>
                 </configuration>
             </plugin>
 

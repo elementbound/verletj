@@ -1,5 +1,7 @@
 package com.github.elementbound.verletj;
 
+import org.joml.Vector2d;
+
 import java.util.Random;
 
 public class MathUtil {
@@ -17,5 +19,13 @@ public class MathUtil {
 
     public static double randomBetween(Random random, double a, double b) {
         return lerp(a, b, random.nextDouble());
+    }
+
+    public static Vector2d directionVector(double direction, double length) {
+        return new Vector2d(Math.cos(direction) * length, Math.sin(direction) * length);
+    }
+
+    public static Vector2d directionVector(double direction) {
+        return directionVector(direction, 1.0);
     }
 }
