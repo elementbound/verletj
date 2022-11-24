@@ -7,6 +7,7 @@ import org.joml.Vector2d;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Simulator {
     private final List<CircleEntity> circles = new ArrayList<>();
@@ -91,7 +92,11 @@ public class Simulator {
         return immutableCirclesView;
     }
 
-    private static record Collision(CircleEntity a, CircleEntity b,
-                                    double distance) {
+    private record Collision(CircleEntity a, CircleEntity b,
+                             double distance) {
+        public static Collision fromPair(CircleEntity a, CircleEntity b) {
+            var distance = a.getPosition().distance(b.getPosition());
+            return new Collision(a, b, distance);
+        }
     }
 }

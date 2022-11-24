@@ -23,8 +23,8 @@ public class RopesScene extends AsyncScene {
         var gravityEffector = new GravityEffector(new Vector2d(0.0, -0.5), simulator.getCircles());
         simulator.addEffector(gravityEffector);
 
-        long restMillis = 100;
-        int ropes = random.nextInt(16, 24);
+        long restMillis = 10;
+        int ropes = random.nextInt(16, 24) * 4;
         for (int i = 0; i < ropes; ++i) {
             var length = random.nextDouble(1.0, 4.0);
             var thickness = 0.125;

@@ -69,6 +69,7 @@ public class VerletJApp {
         var simulationTime = 0.0;
         final var simulationInterval = 1.0 / 60.0;
         final var timeScale = 1.0;
+        final var maxCatchupIterations = 1;
 
         final boolean[] isPaused = {false};
 
@@ -93,7 +94,7 @@ public class VerletJApp {
             }
 
             var catchupTime = System.currentTimeMillis() / 1000.0;
-            while (catchupTime - lastSimulated > simulationInterval) {
+            for (int i = 0; i < maxCatchupIterations && catchupTime - lastSimulated > simulationInterval; ++i) {
                 lastSimulated += simulationInterval;
                 var dt = simulationInterval * timeScale;
                 simulationTime += dt;
@@ -106,7 +107,7 @@ public class VerletJApp {
             simulator.draw();
 
             // Yield remaining time slice
-            sleep(1);
+            Thread.yield();
 
             window.swapBuffers();
             glfwPollEvents();
@@ -116,12 +117,5 @@ public class VerletJApp {
     private void deinit() {
         window.destroy();
         glfwTerminate();
-    }
-
-    private void sleep(long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException ignored) {
-        }
     }
 }
