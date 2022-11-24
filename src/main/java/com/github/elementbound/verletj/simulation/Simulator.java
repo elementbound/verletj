@@ -7,14 +7,14 @@ import org.joml.Vector2d;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class Simulator {
     private final List<CircleEntity> circles = new ArrayList<>();
-    private final List<CircleEntity> immutableCirclesView = Collections.unmodifiableList(circles);
-
     private final List<Constraint> constraints = new ArrayList<>();
     private final List<Effector> effectors = new ArrayList<>();
+
+    private final List<CircleEntity> circlesView = Collections.unmodifiableList(circles);
+    private final SimulationMetrics metrics = new SimulationMetrics();
 
     public synchronized void spawn(CircleEntity entity) {
         circles.add(entity);
@@ -29,6 +29,8 @@ public class Simulator {
     }
 
     public synchronized void simulate(double t, double dt) {
+        metrics.beginFrame();
+
         // Effectors
         effectors.forEach(Effector::apply);
 
@@ -76,10 +78,15 @@ public class Simulator {
                 a.getPosition().sub(axis);
                 b.getPosition().add(axis);
             });
+
+            metrics.collision(collisions.size());
         }
 
         // Effectors
         effectors.forEach(Effector::postResolve);
+
+        metrics.entities(circles.size());
+        metrics.endFrame(dt);
     }
 
     public synchronized void draw() {
@@ -89,7 +96,11 @@ public class Simulator {
     }
 
     public List<CircleEntity> getCircles() {
-        return immutableCirclesView;
+        return circlesView;
+    }
+
+    public SimulationMetrics getMetrics() {
+        return metrics;
     }
 
     private record Collision(CircleEntity a, CircleEntity b,

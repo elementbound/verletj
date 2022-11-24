@@ -1,6 +1,6 @@
 package com.github.elementbound.verletj;
 
-import com.github.elementbound.verletj.scene.RopesScene;
+import com.github.elementbound.verletj.scene.EffectorScene;
 import com.github.elementbound.verletj.simulation.Simulator;
 import com.github.elementbound.verletj.window.Window;
 import com.github.elementbound.verletj.window.WindowHint;
@@ -45,9 +45,7 @@ public class VerletJApp {
             throw new IllegalStateException("Failed to init GLFW");
         }
 
-        window = new Window(640, 480, "VerletJ",
-                new WindowHint(GLFW_RESIZABLE, GLFW_TRUE)
-        );
+        window = new Window(640, 480, "VerletJ", new WindowHint(GLFW_RESIZABLE, GLFW_TRUE));
 
         window.onKey().subscribe(event -> {
             if (event.key() == GLFW_KEY_ESCAPE) {
@@ -62,7 +60,7 @@ public class VerletJApp {
 
         var simulator = new Simulator();
 
-        var scene = new RopesScene();
+        var scene = new EffectorScene();
         scene.run(simulator);
 
         var lastSimulated = System.currentTimeMillis() / 1000.0;
@@ -112,6 +110,19 @@ public class VerletJApp {
             window.swapBuffers();
             glfwPollEvents();
         }
+
+        var metrics = simulator.getMetrics();
+
+        System.out.print("Metrics:\n");
+        System.out.printf("\tFrames simulated: %d\n", metrics.getSimulatedFrames());
+        System.out.printf("\tTime simulated: %fs\n", metrics.getSimulatedTime());
+        System.out.printf("\tReal time: %fs\n", metrics.getRealTime());
+        System.out.printf("\tEntities simulated: %d\n", metrics.getEntitiesSimulated());
+        System.out.printf("\tCollisions resolved: %d\n", metrics.getCollisionsResolved());
+        System.out.print("\t---\n");
+        System.out.printf("\tAverage time per frame: %fms\n", metrics.getRealTime() / metrics.getSimulatedFrames() * 1000.0);
+        System.out.printf("\tAverage FPS: %f\n", 1.0 / (metrics.getRealTime() / metrics.getSimulatedFrames()));
+        System.out.printf("\tCollisions resolved per sec: %f\n", metrics.getCollisionsResolved() / (double) metrics.getSimulatedFrames());
     }
 
     private void deinit() {
